@@ -51,16 +51,27 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
-    public function setPasswordAttribute($value)
-    {
-        $this->attributes['password'] = Hash::make($value);
-    }
     public function role()
     {
         return $this->belongsTo(Role::class);
     }
+
     public function sectionRoom()
     {
-        return $this->hasMany(SectionRoom::class, 'section_room_id');
+        return $this->belongsTo(SectionRoom::class, 'section_room_id');
+    }
+
+    public function tasks()
+    {
+        return $this->belongsToMany(Task::class, 'task_user');
+    }
+    public function isAdmin(): bool
+    {
+        // Pretpostavljamo da postoji polje 'role' koje označava vrstu korisnika
+        return $this->role_id === 1;
+    }
+    public function setPasswordAttribute($value)
+    {
+        $this->attributes['password'] = Hash::make($value);
     }
 }

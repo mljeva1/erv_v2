@@ -1,42 +1,29 @@
 <?php
+
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\DB;
+use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 
 class HashUserPasswords extends Command
 {
-    /**
-     * The name and signature of the console command.
-     *
-     * @var string
-     */
     protected $signature = 'users:hash-passwords';
+    protected $description = 'Hashira sve nehashirane lozinke u bazi';
 
-    /**
-     * The console command description.
-     *
-     * @var string
-     */
-    protected $description = 'Hash all plaintext passwords in the users table';
-
-    /**
-     * Execute the console command.
-     */
     public function handle()
-    {
-        $users = DB::table('users')->get();
-
+    {   
+        $users = User::all();
         foreach ($users as $user) {
-            if (!Hash::needsRehash($user->password)) {
-                DB::table('users')
-                    ->where('id', $user->id)
-                    ->update(['password' => Hash::make($user->password)]);
-                $this->info("Password hashed for user: {$user->email}");
+            if (\Illuminate\Support\Facades\Hash::needsRehash($user->password)) {
+                $originalPassword = $user->password; // Sačuvajte originalnu lozinku za proveru
+                $user->password = $user->password;  // Setter automatski hashira
+                $user->save();
+        
+                $this->info("Lozinka za korisnika {$user->email} je uspešno hashirana. Originalna lozinka: {$originalPassword}");
+            } else {
+                $this->info("Lozinka za korisnika {$user->email} je već hashirana.");
             }
         }
-
-        $this->info('All passwords have been hashed successfully!');
-    }
-}
+        
+}}
