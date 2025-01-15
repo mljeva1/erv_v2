@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use Illuminate\Http\Request;
 
+use App\Models\SectionRoom;
 class UserController extends Controller
 {
     /**
@@ -11,8 +12,9 @@ class UserController extends Controller
      */
     public function index()
     {
-        $users = User::with(['role', 'sectionRoom'])->get(); // Pretpostavlja se da su relacije definirane
-        return view('users.index', compact('users'));
+        $users = User::with(['role', 'sectionRoom'])->get();
+        $sectionRooms = SectionRoom::all();
+        return view('users.index', compact('users', 'sectionRooms'));
     }
 
     /**
@@ -50,9 +52,25 @@ class UserController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, User $user)
     {
-        //
+        // Validacija podataka
+        $validated = $request->validate([
+            'first_name' => 'required|string|max:255',
+            'last_name' => 'required|string|max:255',
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|max:255|unique:users,email,' . $user->id, // Ignoriraj trenutni email korisnika
+            'role_id' => 'required|integer|exists:roles,id',
+            'section_room_id' => 'required|integer|exists:section_rooms,id',
+        ]);
+
+        // Debug podaci iz zahtjeva
+        dd($validated);
+
+        // Ažuriraj korisnika
+        $user->update($validated);
+
+        return redirect()->back()->with('success', 'Korisnik je uspješno ažuriran.');
     }
 
     /**
@@ -60,6 +78,9 @@ class UserController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $user = User::findOrFail($id);
+        $user->delete();
+
+        return redirect()->route('users.index')->with('success', 'Korisnik uspješno obrisan.');
     }
 }

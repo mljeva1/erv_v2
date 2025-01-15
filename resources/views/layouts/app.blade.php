@@ -22,13 +22,40 @@
             <li class="nav-item">
             <a class="nav-link active" aria-current="page" href="{{ route('home') }}">Naslovna</a>
             </li>
-            <li class="nav-item">
-            <a class="nav-link" href="#">Moj ERV</a>
-            </li>
-            <li class="nav-item">
-            <a class="nav-link active" aria-current="page" href="{{ route('users.index') }}">Korisnici</a>
-            </li>
-           
+            @auth
+                @if (Auth::user()->role_id != 1)
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Moj ERV</a>
+                    </li>
+                @endif
+            @endauth
+            @auth
+                @if (Auth::user()->role_id != 2)
+                    <li class="nav-item">
+                        <a class="nav-link" aria-current="page" href="{{ route('users.index') }}">Korisnici</a>
+                    </li>
+                @endif
+            @endauth
+        </ul>
+        <ul class="navbar-nav ms-auto d-flex align-items-center">
+            @auth
+                <li class="nav-item me-2">
+                    <span class="navbar-text text-white p-2">
+                        {{ Auth::user()->first_name }} {{ Auth::user()->last_name }}
+                    </span>
+                </li>
+                <li class="nav-item">
+                    <form action="{{ route('logout') }}" method="POST" class="d-inline">
+                        @csrf
+                        <button class="btn btn-danger btn-sm">Odjava</button>
+                    </form>
+                </li>
+            @endauth
+            @guest
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ route('login') }}">Prijava</a>
+                </li>
+            @endguest
         </ul>
         
         </div>
