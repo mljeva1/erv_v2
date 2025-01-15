@@ -52,26 +52,23 @@ class UserController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, User $user)
+    public function update(Request $request, $id)
     {
-        // Validacija podataka
         $validated = $request->validate([
             'first_name' => 'required|string|max:255',
             'last_name' => 'required|string|max:255',
             'name' => 'required|string|max:255',
-            'email' => 'required|email|max:255|unique:users,email,' . $user->id, // Ignoriraj trenutni email korisnika
+            'email' => 'required|email|max:255|unique:users,email,' . $id,
             'role_id' => 'required|integer|exists:roles,id',
             'section_room_id' => 'required|integer|exists:section_rooms,id',
         ]);
 
-        // Debug podaci iz zahtjeva
-        dd($validated);
-
-        // Ažuriraj korisnika
+        $user = User::findOrFail($id);
         $user->update($validated);
 
-        return redirect()->back()->with('success', 'Korisnik je uspješno ažuriran.');
+        return redirect()->route('users.index')->with('success', 'Korisnik je uspješno ažuriran.');
     }
+
 
     /**
      * Remove the specified resource from storage.
