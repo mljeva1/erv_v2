@@ -21,7 +21,8 @@ class CompanyProfileController extends Controller
      */
     public function create()
     {
-        return view('company_profiles.create');
+        $companyProfiles = CompanyProfile::all();
+        return view('company_profile.create', compact('companyProfiles'));
     }
 
     /**
@@ -29,17 +30,19 @@ class CompanyProfileController extends Controller
      */
     public function store(Request $request)
     {
-        $request->validate([
+        // Validacija
+        $validatedData = $request->validate([
             'company_name' => 'required|string|max:255',
             'description' => 'nullable|string',
             'partnership_start_at' => 'required|date',
-            'partnership_updated_at' => 'nullable|date',
-            'partnership_ended' => 'nullable|date|after_or_equal:partnership_start_at',     
+            'partnership_ended' => 'required|boolean',
         ]);
 
-        CompanyProfile::create($request->all());
+        // Spremanje u bazu
+        CompanyProfile::create($validatedData);
 
-        return redirect()->route('company_profile.index')->with('success', 'Profil kompanije je uspješno kreiran!');
+        // Redirekcija
+        return redirect()->route('company_profiles.index')->with('success', 'Kompanija uspješno dodana!');
     }
 
     /**
@@ -55,7 +58,7 @@ class CompanyProfileController extends Controller
      */
     public function edit(CompanyProfile $companyProfile)
     {
-        return view('company_profiles.edit', compact('companyProfile')); // Forma za uređivanje
+        //
     }
 
     /**
@@ -67,9 +70,9 @@ class CompanyProfileController extends Controller
             'company_name' => 'required|string|max:255',
             'description' => 'nullable|string',
             'partnership_start_at' => 'required|date',
-            'partnership_updated_at' => 'nullable|date',
-            'partnership_ended' => 'nullable|date|after_or_equal:partnership_start_at',
+            'partnership_ended' => 'required|boolean',
         ]);
+        $validated['partnership_updated_at'] = now();
 
         $companyProfile->update($request->all());
 

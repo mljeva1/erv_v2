@@ -28,8 +28,15 @@ class RoleController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validated = $request->validate([
+            'title' => 'required|string|max:255',
+        ]);
+
+        Role::create($validated);
+
+        return redirect()->back()->with('success', 'Rola uspješno dodana!');
     }
+
 
     /**
      * Display the specified resource.
@@ -60,6 +67,7 @@ class RoleController extends Controller
      */
     public function destroy(Role $role)
     {
-        //
+        $role->delete();
+        return redirect()->route('settings.index')->with('success', 'Rola uspješno obrisana!');
     }
 }

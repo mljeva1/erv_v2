@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\SectionRoom;
+use App\Models\Role;
 use Illuminate\Http\Request;
 
 class SectionRoomController extends Controller
@@ -12,7 +13,9 @@ class SectionRoomController extends Controller
      */
     public function index()
     {
-        //
+        $sections = SectionRoom::all();
+        $roles = Role::all();   
+        return view('section_role.index', compact('sections', 'roles'));
     }
 
     /**
@@ -28,7 +31,13 @@ class SectionRoomController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validated = $request->validate([
+            'naziv' => 'required|string|max:255',
+        ]);        
+    
+        SectionRoom::create($validated);
+    
+        return redirect()->back()->with('success', 'Sekcija uspješno dodana!');
     }
 
     /**
@@ -60,6 +69,7 @@ class SectionRoomController extends Controller
      */
     public function destroy(SectionRoom $sectionRoom)
     {
-        //
+        $sectionRoom->delete();
+        return redirect()->back()->with('success', 'Sekcija uspješno obrisana!');
     }
 }

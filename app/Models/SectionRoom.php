@@ -12,6 +12,8 @@ class SectionRoom extends Model
     /** @use HasFactory<\Database\Factories\SectionRoomFactory> */
     use HasFactory;
 
+    protected $fillable = ['naziv'];
+
     protected $table = 'section_rooms';
 
     public function users()

@@ -18,13 +18,12 @@
             <input type="date" class="form-control" id="partnership_start_at" name="partnership_start_at" required>
         </div>
         <div class="mb-3">
-            <label for="partnership_updated_at" class="form-label">Zadnje ažuriranje partnerstva</label>
-            <input type="date" class="form-control" id="partnership_updated_at" name="partnership_updated_at">
-        </div>
-        <div class="mb-3">
-            <label for="partnership_ended" class="form-label">Kraj partnerstva</label>
-            <input type="date" class="form-control" id="partnership_ended" name="partnership_ended">
-        </div>
+            <label for="partnership_ended" class="form-label">Status partnerstva</label>
+            <select class="form-select" id="partnership_ended" name="partnership_ended">
+                <option value="0" selected>U tijeku</option>
+                <option value="1">Završeno</option>
+            </select>
+        </div>        
         <button type="submit" class="btn btn-primary">Spremi</button>
     </form>
 </div>

@@ -50,8 +50,8 @@
                             Administracija
                         </a>
                         <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="#">Profili tvrtki</a></li>
-                            <li><a class="dropdown-item" href="#">Another action</a></li>
+                            <li><a class="dropdown-item" href="{{ route('company_profiles.index') }}">Profili tvrtki</a></li>
+                            <li><a class="dropdown-item" href="{{ route('settings.index') }}">Odjeli i role</a></li>
                             <li><a class="dropdown-item" href="#">Something else here</a></li>
                         </ul>
                     </div>
