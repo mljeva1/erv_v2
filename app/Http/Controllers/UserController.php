@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use Illuminate\Http\Request;
 
+use Illuminate\Support\Facades\Log;
+
 use App\Models\SectionRoom;
 class UserController extends Controller
 {
@@ -54,6 +56,9 @@ class UserController extends Controller
      */
     public function update(Request $request, $id)
     {
+        // Prikaz svih ulaznih podataka za provjeru
+        Log::info('Primljeni podaci:', $request->all());
+
         $validated = $request->validate([
             'first_name' => 'required|string|max:255',
             'last_name' => 'required|string|max:255',
@@ -63,11 +68,17 @@ class UserController extends Controller
             'section_room_id' => 'required|integer|exists:section_rooms,id',
         ]);
 
+        Log::info('Validirani podaci:', $validated);
+
+        // Ažuriranje korisnika
         $user = User::findOrFail($id);
         $user->update($validated);
 
+        Log::info('Korisnik uspješno ažuriran:', $user->toArray());
+
         return redirect()->route('users.index')->with('success', 'Korisnik je uspješno ažuriran.');
     }
+
 
 
     /**

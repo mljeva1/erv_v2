@@ -12,7 +12,8 @@ class CompanyProfileController extends Controller
      */
     public function index()
     {
-        //
+        $companyProfiles = CompanyProfile::all(); // Dohvati sve profile
+        return view('company_profile.index', compact('companyProfiles'));
     }
 
     /**
@@ -20,7 +21,7 @@ class CompanyProfileController extends Controller
      */
     public function create()
     {
-        //
+        return view('company_profiles.create');
     }
 
     /**
@@ -28,7 +29,17 @@ class CompanyProfileController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'company_name' => 'required|string|max:255',
+            'description' => 'nullable|string',
+            'partnership_start_at' => 'required|date',
+            'partnership_updated_at' => 'nullable|date',
+            'partnership_ended' => 'nullable|date|after_or_equal:partnership_start_at',     
+        ]);
+
+        CompanyProfile::create($request->all());
+
+        return redirect()->route('company_profile.index')->with('success', 'Profil kompanije je uspješno kreiran!');
     }
 
     /**
@@ -44,7 +55,7 @@ class CompanyProfileController extends Controller
      */
     public function edit(CompanyProfile $companyProfile)
     {
-        //
+        return view('company_profiles.edit', compact('companyProfile')); // Forma za uređivanje
     }
 
     /**
@@ -52,14 +63,24 @@ class CompanyProfileController extends Controller
      */
     public function update(Request $request, CompanyProfile $companyProfile)
     {
-        //
-    }
+        $request->validate([
+            'company_name' => 'required|string|max:255',
+            'description' => 'nullable|string',
+            'partnership_start_at' => 'required|date',
+            'partnership_updated_at' => 'nullable|date',
+            'partnership_ended' => 'nullable|date|after_or_equal:partnership_start_at',
+        ]);
 
+        $companyProfile->update($request->all());
+
+        return redirect()->route('company_profiles.index')->with('success', 'Profil kompanije je uspješno ažuriran!');
+    }
     /**
      * Remove the specified resource from storage.
      */
     public function destroy(CompanyProfile $companyProfile)
     {
-        //
+        $companyProfile->delete();
+        return redirect()->route('company_profiles.index')->with('success', 'Profil kompanije je uspješno obrisan!');
     }
 }

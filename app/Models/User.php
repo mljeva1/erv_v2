@@ -23,6 +23,7 @@ class User extends Authenticatable
         'last_name',
         'name',
         'email',
+        'password',
         'role_id',
         'section_room_id',
     ];
@@ -69,8 +70,10 @@ class User extends Authenticatable
         // Pretpostavljamo da postoji polje 'role' koje označava vrstu korisnika
         return $this->role_id === 1;
     }
+    /*
     public function setPasswordAttribute($value)
     {
         $this->attributes['password'] = Hash::make($value);
     }
+    */
 }

@@ -16,3 +16,8 @@ Route::get('/login', function () {
 
 Route::post('/login', [App\Http\Controllers\AuthController::class, 'login'])->name('login.post');
 Route::post('/logout', [App\Http\Controllers\AuthController::class, 'logout'])->name('logout');
+Route::get('/register', [App\Http\Controllers\AuthController::class, 'showRegistrationForm'])->name('register');
+Route::post('/register', [App\Http\Controllers\AuthController::class, 'register']);
+
+use App\Http\Controllers\CompanyProfileController;
+Route::resource('company_profiles', CompanyProfileController::class);

@@ -20,12 +20,12 @@
         <div class="collapse navbar-collapse mt-1" id="navbarSupportedContent">
         <ul class="navbar-nav me-auto mb-0 ms-lg-0 text-center">
             <li class="nav-item">
-            <a class="nav-link active" aria-current="page" href="{{ route('home') }}">Naslovna</a>
+            <a class="nav-link active btn" aria-current="page" href="{{ route('home') }}">Naslovna</a>
             </li>
             @auth
                 @if (Auth::user()->role_id != 1)
                     <li class="nav-item">
-                        <a class="nav-link" href="#">Moj ERV</a>
+                        <a class="nav-link btn" href="#">Moj ERV</a>
                     </li>
                 @endif
             @endauth
@@ -36,6 +36,28 @@
                     </li>
                 @endif
             @endauth
+            @auth
+                @if (Auth::user()->role_id == 1)
+                <li class="nav-item d-flex align-items-center">
+                    <span class="border-end me-2 pe-2 align-self-stretch"></span>
+                    <div class="dropdown">
+                        <a 
+                            class="nav-link dropdown-toggle" 
+                            href="#" 
+                            role="button" 
+                            data-bs-toggle="dropdown" 
+                            aria-expanded="false">
+                            Administracija
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="#">Profili tvrtki</a></li>
+                            <li><a class="dropdown-item" href="#">Another action</a></li>
+                            <li><a class="dropdown-item" href="#">Something else here</a></li>
+                        </ul>
+                    </div>
+                </li>
+                @endif
+            @endauth    
         </ul>
         <ul class="navbar-nav ms-auto d-flex align-items-center">
             @auth
@@ -54,6 +76,9 @@
             @guest
                 <li class="nav-item">
                     <a class="nav-link" href="{{ route('login') }}">Prijava</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ route('register') }}">Registracija</a>
                 </li>
             @endguest
         </ul>

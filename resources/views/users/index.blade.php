@@ -21,9 +21,10 @@
             </tr>
         </thead>
         <tbody>
-            @forelse($users as $user)
+            
+            @forelse($users as $key => $user)
             <tr>
-                <td>{{ $user->id }}</td>
+                <td>{{ $key + 1 }}</td>
                 <td>{{ $user->first_name }}</td>
                 <td>{{ $user->last_name }}</td>
                 <td>{{ $user->name }}</td>
@@ -78,9 +79,9 @@
                                 <div class="mb-3">
                                     <label for="role{{ $user->id }}" class="form-label">Uloga</label>
                                     <select class="form-select" id="role{{ $user->id }}" name="role_id">
-                                        <option value="2" {{ $user->role_id == 4 ? 'selected' : '' }}>Direktor</option>
-                                        <option value="2" {{ $user->role_id == 3 ? 'selected' : '' }}>Voditelj</option>
-                                        <option value="1" {{ $user->role_id == 2 ? 'selected' : '' }}>User</option>
+                                        <option value="4" {{ $user->role_id == 4 ? 'selected' : '' }}>Direktor</option>
+                                        <option value="3" {{ $user->role_id == 3 ? 'selected' : '' }}>Voditelj</option>
+                                        <option value="2" {{ $user->role_id == 2 ? 'selected' : '' }}>User</option>
                                     </select>
                                 </div>
                                 <div class="mb-3">
