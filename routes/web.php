@@ -2,8 +2,12 @@
 
 use Illuminate\Support\Facades\Route;
 
+use App\Models\Task;
+use App\Models\User;
 Route::get('/', function () {
-    return view('home.index');
+    $totalTasks = Task::count();
+    $totalUsers = User::count();
+    return view('home.index', compact('totalTasks','totalUsers'));
 })->name('home');
 
 use App\Http\Controllers\UserController;

@@ -11,5 +11,11 @@
     @else
         <h2>Dobrodošao {{ Auth::user()->first_name }} {{ Auth::user()->last_name }}</h2>
     @endguest
+    @auth
+        @if (Auth::user()->role_id == 1) 
+            <span class="align-text-bottom">Ukupno zadataka: <strong>{{ $totalTasks }}</strong></span><br>
+            <span class="align-text-bottom">Ukupno korisnika: <strong>{{ $totalUsers }}</strong></span>
+        @endif
+    @endauth
 </div>
 @endsection

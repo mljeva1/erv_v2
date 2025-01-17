@@ -71,6 +71,12 @@ class User extends Authenticatable
         return $this->role_id === 1;
     }
 
+    public function taskStatus()
+    {
+        return $this->belongsTo(TaskStatus::class, 'task_status_id');
+    }
+
+
     /*
     public function setPasswordAttribute($value)
     {

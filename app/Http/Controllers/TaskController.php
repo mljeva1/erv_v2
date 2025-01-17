@@ -13,8 +13,9 @@ class TaskController extends Controller
      */
     public function index(Request $request)
     {
-        $sortBy = $request->query('sort_by', 'task_code'); // Zadani kriterij je task_code
-        $sortOrder = $request->query('sort_order', 'asc'); // Zadani redoslijed je rastući (asc)
+        $sortBy = $request->query('sort_by', 'task_code');
+        $sortOrder = $request->query('sort_order', 'asc');
+        $status = $request->query('status'); // Dohvati status iz upitnog parametra
 
         $tasks = Task::select('tasks.*')
             ->leftJoin('company_profiles', 'tasks.company_profile_id', '=', 'company_profiles.id')
@@ -28,12 +29,16 @@ class TaskController extends Controller
             ->when($sortBy === 'activity_name', function ($query) use ($sortOrder) {
                 return $query->orderBy('activity_types.name', $sortOrder);
             })
+            ->when($status, function ($query) use ($status) {
+                return $query->where('tasks.task_status_id', $status); // Filtriranje po statusu
+            })
             ->paginate(9);
-        
-        $users = User::all();
 
-        return view('tasks.index', compact('tasks', 'sortBy', 'sortOrder', 'users'));
+        $totalTasks = Task::count();
+        $users = User::all();
+        return view('tasks.index', compact('tasks', 'sortBy', 'sortOrder', 'users', 'status', 'totalTasks'));
     }
+
 
     public function assignUsers(Request $request, $taskId)
     {

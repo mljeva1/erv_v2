@@ -4,6 +4,28 @@
 <div class="container mt-4">
     <h2 class="text-center">Popis svih zadataka</h2>
     <table class="table table-striped table-bordered table-hover mt-4">
+        
+        <form method="GET" action="{{ route('tasks.index') }}" class="mb-2">
+            <div class="row">
+                <div class="col-md-2">
+                    <select name="status" class="form-select" onchange="this.form.submit()">
+                        <option value="">Svi statusi</option>
+                        <option value="1" {{ request('status') == 'blank' ? 'selected' : '' }}>Nije preuzeto</option>
+                        <option value="2" {{ request('status') == 'in_progress' ? 'selected' : '' }}>Preuzeto</option>
+                        <option value="3" {{ request('status') == 'pending' ? 'selected' : '' }}>U tijeku</option>
+                        <option value="4" {{ request('status') == 'cancelled' ? 'selected' : '' }}>Otkazano</option>
+                        <option value="5" {{ request('status') == 'done' ? 'selected' : '' }}>Rješeno</option>
+                    </select>
+                </div>
+                <div class="col-md-2">
+                    <button type="submit" class="btn btn-primary">Primijeni</button>
+                </div>
+                <div class="col-md-6">
+                    <span class="align-text-bottom">Ukupno zadataka: <strong>{{ $totalTasks }}</strong></span>
+                </div>
+            </div>
+        </form>
+        
         <thead class="table-dark">
             <tr>
                 <th>
@@ -40,7 +62,9 @@
                 </th>
                 <th>Status</th>
                 <th>Zaduženi korisnici</th>
-                <th></th>
+                @if (Auth::user()->role_id != 2) 
+                    <th></th>
+                @endif
             </tr>
         </thead>
         <tbody>
@@ -56,11 +80,13 @@
                         {{ $user->first_name }} {{ $user->last_name }} <br>
                     @endforeach
                 </td>
+                @if (Auth::user()->role_id != 2) 
                 <td>
                     <button class="btn btn-outline-success btn-sm" data-bs-toggle="modal" data-bs-target="#assignUsersModal{{ $task->id }}">
                         <i class="bi bi-people"></i> Dodijeli korisnike
                     </button>
                 </td>
+                @endif
             </tr>
         
             <!-- Modal za trenutni zadatak -->
