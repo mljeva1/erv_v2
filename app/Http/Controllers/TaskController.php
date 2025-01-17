@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Task;
+use App\Models\ActivityType;
+use App\Models\TaskStatus;
 use Illuminate\Http\Request;
 
 class TaskController extends Controller
@@ -12,7 +14,10 @@ class TaskController extends Controller
      */
     public function index()
     {
-        //
+        $tasks = Task::with(['activityType', 'taskStatus'])->get();
+        $activityType = ActivityType::all();
+        $taskStatuses = TaskStatus::all();
+        return view('tasks.index', compact('tasks', 'activityType', 'taskStatuses'));
     }
 
     /**

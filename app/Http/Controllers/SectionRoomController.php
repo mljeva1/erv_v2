@@ -67,9 +67,11 @@ class SectionRoomController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(SectionRoom $sectionRoom)
+    public function destroy($id)
     {
-        $sectionRoom->delete();
+        $section = SectionRoom::findOrFail($id);
+        $section->delete();
+
         return redirect()->back()->with('success', 'Sekcija uspješno obrisana!');
     }
 }

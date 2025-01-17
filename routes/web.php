@@ -24,8 +24,11 @@ Route::resource('company_profiles', CompanyProfileController::class);
 
 use App\Http\Controllers\SectionRoomController;
 use App\Http\Controllers\RoleController;
-Route::resource('sections', SectionRoomController::class)->only(['store', 'destroy']);
+Route::resource('sections', SectionRoomController::class)->only(['create', 'store', 'destroy']);
 Route::resource('roles', RoleController::class);
 Route::get('/settings', [SectionRoomController::class, 'index'])->name('settings.index');
 Route::post('/sections', [SectionRoomController::class, 'store'])->name('sections.store');
 Route::delete('/sections/{section}', [SectionRoomController::class, 'destroy'])->name('sections.destroy');
+
+use App\Http\Controllers\TaskController;
+Route::resource('tasks', TaskController::class);

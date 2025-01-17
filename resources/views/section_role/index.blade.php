@@ -18,7 +18,7 @@
                             @csrf
                             @method('DELETE')
                             <button type="submit" class="btn btn-danger btn-sm">Obriši</button>
-                        </form>                        
+                        </form>                                          
                     </li>
                 @endforeach
             </ul>
@@ -63,7 +63,7 @@
                         <input type="text" name="naziv" id="section_name" class="form-control" placeholder="Unesi naziv sekcije" required>
                     </div>
                     <button type="submit" class="btn btn-primary">Spremi</button>
-                </form>
+                </form>                
             </div>
         </div>
     </div>
