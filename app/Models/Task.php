@@ -13,7 +13,8 @@ class Task extends Model
         'work_time',
         'company_profile_id',
         'activity_type_id',
-        'task_status_id'
+        'task_status_id',
+        'task_date'
     ];
 
     public function activityType()
@@ -29,5 +30,9 @@ class Task extends Model
     public function companyProfile()
     {
         return $this->belongsTo(CompanyProfile::class);
+    }
+    public function users()
+    {
+        return $this->belongsToMany(User::class, 'task_user', 'task_id', 'user_id')->withTimestamps();
     }
 }

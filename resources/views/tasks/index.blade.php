@@ -1,71 +1,107 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container-fluid mt-4">
-    <h2 class="text-center">Popis svih taskova</h2>
-
-    <!-- Formular za pretragu -->
-    <form action="{{ route('tasks.index') }}" method="GET" class="mb-3">
-        <div class="row">
-            <div class="col-md-6">
-                <input type="text" name="search" class="form-control" placeholder="Pretraži taskove..." value="{{ request('search') }}">
-            </div>
-            <div class="col-md-2">
-                <button type="submit" class="btn btn-primary">Pretraži</button>
-            </div>
-        </div>
-    </form>
-
-     <!-- Tablica -->
-     <table class="table table-striped table-bordered table-hover mt-4">
+<div class="container mt-4">
+    <h2 class="text-center">Popis svih zadataka</h2>
+    <table class="table table-striped table-bordered table-hover mt-4">
         <thead class="table-dark">
             <tr>
-                <th>#</th>
                 <th>
-                    <a href="{{ route('tasks.index', ['sort_by' => 'task_code', 'sort_order' => $sortBy === 'task_code' && $sortOrder === 'asc' ? 'desc' : 'asc']) }}" class="text-white">
+                    <a href="{{ route('tasks.index', ['sort_by' => 'task_code', 'sort_order' => request('sort_order') == 'asc' ? 'desc' : 'asc']) }}" class="text-white">
                         Task Code
-                        @if ($sortBy === 'task_code')
-                            <i class="bi {{ $sortOrder === 'asc' ? 'bi-arrow-up' : 'bi-arrow-down' }}"></i>
-                        @endif
-                    </a>
-                </th>
-                <th>
-                    <a href="{{ route('tasks.index', ['sort_by' => 'task_name', 'sort_order' => $sortBy === 'task_name' && $sortOrder === 'asc' ? 'desc' : 'asc']) }}" class="text-white">
-                        Task Name
-                        @if ($sortBy === 'task_name')
-                            <i class="bi {{ $sortOrder === 'asc' ? 'bi-arrow-up' : 'bi-arrow-down' }}"></i>
-                        @endif
-                    </a>
-                </th>
-                <th>Task Description</th>
-                <th>Work Time</th>
-                <th>
-                    <a href="{{ route('tasks.index', ['sort_by' => 'company_profile_id', 'sort_order' => request('sort_order') == 'asc' ? 'desc' : 'asc']) }}" class="text-white">
-                        Kompanija
-                        @if (request('sort_by') == 'company_profile_id')
+                        @if (request('sort_by') == 'task_code')
                             <i class="bi {{ request('sort_order') == 'asc' ? 'bi-sort-up' : 'bi-sort-down' }}"></i>
                         @endif
                     </a>
                 </th>
-                <th>Vrsta aktivnosti</th>
+                <th>
+                    <a href="{{ route('tasks.index', ['sort_by' => 'task_name', 'sort_order' => request('sort_order') == 'asc' ? 'desc' : 'asc']) }}" class="text-white">
+                        Task Name
+                        @if (request('sort_by') == 'task_name')
+                            <i class="bi {{ request('sort_order') == 'asc' ? 'bi-sort-up' : 'bi-sort-down' }}"></i>
+                        @endif
+                    </a>
+                </th>
+                <th>
+                    <a href="{{ route('tasks.index', ['sort_by' => 'company_name', 'sort_order' => request('sort_order') == 'asc' ? 'desc' : 'asc']) }}" class="text-white">
+                        Kompanija
+                        @if (request('sort_by') == 'company_name')
+                            <i class="bi {{ request('sort_order') == 'asc' ? 'bi-sort-up' : 'bi-sort-down' }}"></i>
+                        @endif
+                    </a>
+                </th>
+                <th>
+                    <a href="{{ route('tasks.index', ['sort_by' => 'activity_name', 'sort_order' => request('sort_order') == 'asc' ? 'desc' : 'asc']) }}" class="text-white">
+                        Vrsta aktivnosti
+                        @if (request('sort_by') == 'activity_name')
+                            <i class="bi {{ request('sort_order') == 'asc' ? 'bi-sort-up' : 'bi-sort-down' }}"></i>
+                        @endif
+                    </a>
+                </th>
                 <th>Status</th>
+                <th>Zaduženi korisnici</th>
+                <th></th>
             </tr>
         </thead>
         <tbody>
-            @forelse($tasks as $key => $task)
+            @forelse($tasks as $task)
             <tr>
-                <td>{{ $tasks->firstItem() + $key }}</td>
                 <td>{{ $task->task_code }}</td>
                 <td>{{ $task->task_name }}</td>
-                <td>{{ $task->task_description }}</td>
-                <td>{{ $task->work_time }}</td>
                 <td>{{ $task->companyProfile->company_name ?? 'N/A' }}</td>
                 <td>{{ $task->activityType->name ?? 'N/A' }}</td>
                 <td>{{ $task->taskStatus->name ?? 'N/A' }}</td>
+                <td>
+                    @foreach($task->users as $user)
+                        {{ $user->first_name }} {{ $user->last_name }} <br>
+                    @endforeach
+                </td>
+                <td>
+                    <button class="btn btn-outline-success btn-sm" data-bs-toggle="modal" data-bs-target="#assignUsersModal{{ $task->id }}">
+                        <i class="bi bi-people"></i> Dodijeli korisnike
+                    </button>
+                </td>
             </tr>
+        
+            <!-- Modal za trenutni zadatak -->
+            <div class="modal fade" id="assignUsersModal{{ $task->id }}" tabindex="-1" aria-labelledby="assignUsersModalLabel{{ $task->id }}" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="assignUsersModalLabel{{ $task->id }}">Dodijeli korisnike zadatku</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Zatvori"></button>
+                        </div>
+                        <form action="{{ route('tasks.assignUsers', $task->id) }}" method="POST">
+                            @csrf
+                            <div class="modal-body">
+                                <p>Označite korisnike koje želite dodati ili ukloniti iz zadatka:</p>
+                                <div class="form-check">
+                                    @foreach($users as $user)
+                                        <div class="mb-2">
+                                            <input type="checkbox" 
+                                                   class="form-check-input" 
+                                                   id="user-{{ $task->id }}-{{ $user->id }}" 
+                                                   name="users[]" 
+                                                   value="{{ $user->id }}" 
+                                                   {{ $task->users->contains($user->id) ? 'checked' : '' }}>
+                                            <label class="form-check-label" for="user-{{ $task->id }}-{{ $user->id }}">
+                                                {{ $user->first_name }} {{ $user->last_name }} ({{ $user->name }})
+                                            </label>
+                                        </div>
+                                    @endforeach
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Zatvori</button>
+                                <button type="submit" class="btn btn-primary">Spremi promjene</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
             @empty
             <tr>
-                <td colspan="8" class="text-center">Nema dostupnih taskova.</td>
+                <td colspan="7" class="text-center">Nema dostupnih zadataka.</td>
             </tr>
             @endforelse
         </tbody>

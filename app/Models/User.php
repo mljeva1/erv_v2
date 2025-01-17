@@ -63,13 +63,14 @@ class User extends Authenticatable
 
     public function tasks()
     {
-        return $this->belongsToMany(Task::class, 'task_user');
+        return $this->belongsToMany(Task::class, 'task_user', 'user_id', 'task_id')->withTimestamps();
     }
     public function isAdmin(): bool
     {
         // Pretpostavljamo da postoji polje 'role' koje označava vrstu korisnika
         return $this->role_id === 1;
     }
+
     /*
     public function setPasswordAttribute($value)
     {

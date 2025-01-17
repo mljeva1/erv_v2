@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Task;
+use App\Models\User;
 use Illuminate\Http\Request;
 
 class TaskController extends Controller
@@ -12,28 +13,44 @@ class TaskController extends Controller
      */
     public function index(Request $request)
     {
-        // Početna query s eager loadingom
-        $query = Task::with(['companyProfile', 'activityType', 'taskStatus']);
+        $sortBy = $request->query('sort_by', 'task_code'); // Zadani kriterij je task_code
+        $sortOrder = $request->query('sort_order', 'asc'); // Zadani redoslijed je rastući (asc)
 
-        // Filtriranje: Dodaj uvjete za pretragu
-        if ($request->has('search') && $request->search != '') {
-            $query->where('task_name', 'like', '%' . $request->search . '%')
-                ->orWhere('task_code', 'like', '%' . $request->search . '%');
-        }
+        $tasks = Task::select('tasks.*')
+            ->leftJoin('company_profiles', 'tasks.company_profile_id', '=', 'company_profiles.id')
+            ->leftJoin('activity_types', 'tasks.activity_type_id', '=', 'activity_types.id')
+            ->when(in_array($sortBy, ['task_code', 'task_name']), function ($query) use ($sortBy, $sortOrder) {
+                return $query->orderBy($sortBy, $sortOrder);
+            })
+            ->when($sortBy === 'company_name', function ($query) use ($sortOrder) {
+                return $query->orderBy('company_profiles.company_name', $sortOrder);
+            })
+            ->when($sortBy === 'activity_name', function ($query) use ($sortOrder) {
+                return $query->orderBy('activity_types.name', $sortOrder);
+            })
+            ->paginate(9);
+        
+        $users = User::all();
 
-        // Sortiranje: Provjera sortiranja po stupcu i smjeru
-        $sortBy = $request->get('sort_by', 'task_name'); // Zadani stupac za sortiranje
-        $sortOrder = $request->get('sort_order', 'asc'); // Zadani smjer sortiranja (asc)
-
-        // Primjena sortiranja
-        $query->orderBy($sortBy, $sortOrder);
-
-        // Paginacija: Prikaz 10 rezultata po stranici
-        $tasks = $query->paginate(10);
-
-        // Vraćanje pogleda s podacima
-        return view('tasks.index', compact('tasks', 'sortBy', 'sortOrder'));    
+        return view('tasks.index', compact('tasks', 'sortBy', 'sortOrder', 'users'));
     }
+
+    public function assignUsers(Request $request, $taskId)
+    {
+        $task = Task::findOrFail($taskId);
+
+        $request->validate([
+            'users' => 'array',
+            'users.*' => 'exists:users,id',
+        ]);
+
+        // Sinkronizacija korisnika (dodavanje i uklanjanje)
+        $task->users()->sync($request->users);
+
+        return redirect()->route('tasks.index')->with('success', 'Korisnici su uspješno ažurirani za zadatak.');
+    }
+
+
 
     /**
      * Show the form for creating a new resource.
