@@ -25,4 +25,9 @@ class Task extends Model
     {
         return $this->belongsTo(TaskStatus::class);
     }
+
+    public function companyProfile()
+    {
+        return $this->belongsTo(CompanyProfile::class);
+    }
 }

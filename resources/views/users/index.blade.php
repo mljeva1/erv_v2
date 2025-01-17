@@ -3,7 +3,7 @@
 @section('content')
 <div class="container mt-4">
     <h2 class="text-center">Popis korisnika evidencije radnog vremena</h2>
-    <table class="table table-striped table-bordered table-hover mt-3">
+    <table class="table  table-striped table-bordered table-hover mt-3">
         <thead class="table-dark">
             <tr>
                 <th>#</th>
@@ -33,15 +33,19 @@
                 <td>{{ $user->sectionRoom->naziv ?? 'N/A' }}</td>
                 @auth         
                     @if (Auth::user()->role_id == 1)       
-                    <td>
+                    <td style="width: 100px;">
                         <!-- Gumb za uređivanje -->
-                        <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#editUserModal{{ $user->id }}">&#9998;</button>
+                        <button class="btn btn-outline-warning btn-sm" data-bs-toggle="modal" data-bs-target="#editUserModal{{ $user->id }}">
+                            <i class="bi bi-pencil-square"></i>
+                        </button>
                         
                         <!-- Gumb za brisanje -->
                         <form action="{{ route('users.destroy', $user->id) }}" method="POST" style="display:inline-block;">
                             @csrf
                             @method('DELETE')
-                            <button class="btn btn-danger btn-sm" onclick="return confirm('Jeste li sigurni da želite obrisati ovog korisnika?')">&#128465;</button>
+                            <button class="btn btn-outline-danger btn-sm" onclick="return confirm('Jeste li sigurni da želite obrisati ovog korisnika?')">
+                                <i class="bi bi-trash-fill"></i>
+                            </button>
                         </form>
                     </td>
                     @endif

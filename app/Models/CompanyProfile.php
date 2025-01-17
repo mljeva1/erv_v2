@@ -16,4 +16,9 @@ class CompanyProfile extends Model
         'partnership_updated_at',
         'partnership_ended',
     ];
+
+    public function tasks()
+    {
+        return $this->hasMany(Task::class);
+    }
 }

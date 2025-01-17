@@ -37,11 +37,15 @@
                 @auth
                     @if (Auth::user()->role_id == 1)
                     <td>
-                        <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#editCompanyModal{{ $profile->id }}">&#9998;</button>
+                        <button class="btn btn-outline-warning btn-sm" data-bs-toggle="modal" data-bs-target="#editCompanyModal{{ $profile->id }}">
+                            <i class="bi bi-pencil-square"></i>
+                        </button>
                         <form action="{{ route('company_profiles.destroy', $profile->id) }}" method="POST" class="d-inline">
                             @csrf
                             @method('DELETE')
-                            <button class="btn btn-sm btn-danger" onclick="return confirm('Jeste li sigurni?')">&#128465;</button>
+                            <button class="btn btn-sm btn-outline-danger" onclick="return confirm('Jeste li sigurni?')">
+                                <i class="bi bi-trash-fill"></i>
+                            </button>
                         </form>
                     </td>
                     @endif

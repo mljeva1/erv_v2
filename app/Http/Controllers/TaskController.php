@@ -3,8 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Models\Task;
-use App\Models\ActivityType;
-use App\Models\TaskStatus;
 use Illuminate\Http\Request;
 
 class TaskController extends Controller
@@ -12,12 +10,29 @@ class TaskController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $tasks = Task::with(['activityType', 'taskStatus'])->get();
-        $activityType = ActivityType::all();
-        $taskStatuses = TaskStatus::all();
-        return view('tasks.index', compact('tasks', 'activityType', 'taskStatuses'));
+        // Početna query s eager loadingom
+        $query = Task::with(['companyProfile', 'activityType', 'taskStatus']);
+
+        // Filtriranje: Dodaj uvjete za pretragu
+        if ($request->has('search') && $request->search != '') {
+            $query->where('task_name', 'like', '%' . $request->search . '%')
+                ->orWhere('task_code', 'like', '%' . $request->search . '%');
+        }
+
+        // Sortiranje: Provjera sortiranja po stupcu i smjeru
+        $sortBy = $request->get('sort_by', 'task_name'); // Zadani stupac za sortiranje
+        $sortOrder = $request->get('sort_order', 'asc'); // Zadani smjer sortiranja (asc)
+
+        // Primjena sortiranja
+        $query->orderBy($sortBy, $sortOrder);
+
+        // Paginacija: Prikaz 10 rezultata po stranici
+        $tasks = $query->paginate(10);
+
+        // Vraćanje pogleda s podacima
+        return view('tasks.index', compact('tasks', 'sortBy', 'sortOrder'));    
     }
 
     /**
