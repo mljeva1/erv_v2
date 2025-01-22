@@ -38,14 +38,7 @@ class TaskController extends Controller
         $totalTasks = Task::count();
         $users = User::all();
 
-        // Dohvat trenutno prijavljenog korisnika
-        $user = Auth::user();
-        $assignedTasks = collect(); // Prazna kolekcija kao zadana vrijednost
-        if ($user && $user->role_id != 1) { // Ako nije admin
-            $assignedTasks = $user->tasks; // Pretpostavlja relaciju između User i Task modela
-        }
-
-        return view('tasks.index', compact('tasks', 'sortBy', 'sortOrder', 'users', 'status', 'totalTasks', 'assignedTasks'));
+        return view('tasks.index', compact('tasks', 'sortBy', 'sortOrder', 'users', 'status', 'totalTasks'));
     }
 
 
