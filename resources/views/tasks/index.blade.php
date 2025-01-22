@@ -20,12 +20,11 @@
                 <div class="col-md-2">
                     <button type="submit" class="btn btn-primary">Primijeni</button>
                 </div>
-                <div class="col-md-6">
-                    <span class="align-text-bottom">Ukupno zadataka: <strong>{{ $totalTasks }}</strong></span>
-                </div>
             </div>
         </form>
-        
+        <div class="col-md-6">
+            <span class="align-text-bottom">Ukupno zadataka: <strong>{{ $totalTasks }}</strong></span>
+        </div>
         <thead class="table-dark">
             <tr>
                 <th>
