@@ -37,3 +37,6 @@ Route::delete('/sections/{section}', [SectionRoomController::class, 'destroy'])-
 use App\Http\Controllers\TaskController;
 Route::resource('tasks', TaskController::class);
 Route::post('/tasks/{task}/assign-users', [TaskController::class, 'assignUsers'])->name('tasks.assignUsers');
+
+use App\Http\Controllers\SearchController;
+Route::get('/search', [SearchController::class, 'search'])->name('search');

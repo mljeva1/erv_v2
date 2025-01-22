@@ -62,6 +62,19 @@
         </ul>
         <ul class="navbar-nav ms-auto d-flex align-items-center">
             @auth
+                <li>
+                    <form action="{{ route('search') }}" method="GET" class="d-flex">
+                        <input 
+                            type="text" 
+                            name="query" 
+                            class="form-control me-2" 
+                            placeholder="Pretraži..." 
+                            aria-label="Pretraži"
+                            value="{{ request('query') }}"
+                        >
+                        <button class="btn btn-outline-primary" type="submit">Pretraži</button>
+                    </form>
+                </li>
                 <li class="nav-item me-2">
                     <span class="navbar-text text-white p-2">
                         {{ Auth::user()->first_name }} {{ Auth::user()->last_name }}

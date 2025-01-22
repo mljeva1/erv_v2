@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Task;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class TaskController extends Controller
 {
@@ -36,7 +37,15 @@ class TaskController extends Controller
 
         $totalTasks = Task::count();
         $users = User::all();
-        return view('tasks.index', compact('tasks', 'sortBy', 'sortOrder', 'users', 'status', 'totalTasks'));
+
+        // Dohvat trenutno prijavljenog korisnika
+        $user = Auth::user();
+        $assignedTasks = collect(); // Prazna kolekcija kao zadana vrijednost
+        if ($user && $user->role_id != 1) { // Ako nije admin
+            $assignedTasks = $user->tasks; // Pretpostavlja relaciju između User i Task modela
+        }
+
+        return view('tasks.index', compact('tasks', 'sortBy', 'sortOrder', 'users', 'status', 'totalTasks', 'assignedTasks'));
     }
 
 

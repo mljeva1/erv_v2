@@ -65,6 +65,7 @@ class User extends Authenticatable
     {
         return $this->belongsToMany(Task::class, 'task_user', 'user_id', 'task_id')->withTimestamps();
     }
+
     public function isAdmin(): bool
     {
         // Pretpostavljamo da postoji polje 'role' koje označava vrstu korisnika
