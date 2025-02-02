@@ -40,3 +40,9 @@ Route::post('/tasks/{task}/assign-users', [TaskController::class, 'assignUsers']
 
 use App\Http\Controllers\SearchController;
 Route::get('/search', [SearchController::class, 'search'])->name('search');
+
+use App\Http\Controllers\EvidencijaController;
+
+Route::middleware(['auth'])->group(function () {
+    Route::resource('evidencija', EvidencijaController::class);
+});
