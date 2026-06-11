@@ -1,1 +1,7 @@
 /vendor
+/node_modules
+/public/build
+.env
+.env.local
+.env.backup
+.env.production

@@ -140,6 +140,40 @@ The application will be available at `http://localhost:8000`.
 
 ---
 
+## Vercel Deployment
+
+This repository is configured for Vercel as a Laravel PHP application, not as a static Vite app.
+
+Important Vercel settings:
+
+| Setting | Value |
+|---|---|
+| Framework Preset | Other |
+| Install Command | `composer install --no-dev --prefer-dist --optimize-autoloader && npm ci` |
+| Build Command | `npm run build` |
+| Output Directory | `public` |
+
+The output directory must be `public`. Laravel serves from `public/index.php`, and Vite writes compiled assets to `public/build`; this project does not generate a root `dist` directory.
+
+Set these environment variables in the Vercel dashboard:
+
+```bash
+APP_KEY=base64:...
+APP_URL=https://your-vercel-domain.vercel.app
+DB_SYNC_URL=libsql://<database>.turso.io
+DB_AUTH_TOKEN=<turso-auth-token>
+```
+
+Generate `APP_KEY` locally with:
+
+```bash
+php artisan key:generate --show
+```
+
+Do not commit `.env` or production secrets to Git.
+
+---
+
 ## Project Structure
 
 ```
@@ -185,4 +219,3 @@ routes/
 ## License
 
 This project is open-source and available under the [MIT License](https://opensource.org/licenses/MIT).
-
