@@ -1,67 +1,188 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Evidencija Radnog Vremena v2
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+**Work Time Tracking System** — A web application for managing employee work records, task assignments, and company partnerships, built with Laravel 11.
 
-## About Laravel
+---
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## Table of Contents
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+- [Overview](#overview)
+- [Features](#features)
+- [Tech Stack](#tech-stack)
+- [Database Schema](#database-schema)
+- [Getting Started](#getting-started)
+- [Usage](#usage)
+- [Project Structure](#project-structure)
+- [License](#license)
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+---
 
-## Learning Laravel
+## Overview
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+**Evidencija Radnog Vremena v2** (Work Time Records v2) is a role-based web application designed for organizations to track and manage employee work time. It allows administrators to define tasks, assign them to employees, and monitor progress — while employees can log their daily work hours against specific tasks and activity types.
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+---
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+## Features
 
-## Laravel Sponsors
+- **Authentication** — Secure registration and login with session-based authentication
+- **Role-Based Access Control** — Separate views and permissions for administrators and employees
+- **User Management** — Administrators can view, edit, and delete employee accounts
+- **Task Management** — Create tasks linked to company profiles, activity types, and statuses; assign multiple users to a task
+- **Work Time Records (Evidencija)** — Employees log daily work entries with date, hours, task, and activity type
+- **Company Profiles** — Maintain a directory of partner/client companies with partnership dates
+- **Sections & Roles** — Manage organizational departments and user roles from the admin settings panel
+- **Global Search** — Search across users, tasks, and companies from the navigation bar
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+---
 
-### Premium Partners
+## Tech Stack
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[WebReinvent](https://webreinvent.com/)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Jump24](https://jump24.co.uk)**
-- **[Redberry](https://redberry.international/laravel/)**
-- **[Active Logic](https://activelogic.com)**
-- **[byte5](https://byte5.de)**
-- **[OP.GG](https://op.gg)**
+| Layer | Technology |
+|---|---|
+| Language | PHP 8.2+ |
+| Framework | Laravel 11 |
+| Database | SQLite (local) |
+| Frontend | Blade Templates, Bootstrap 5.3 |
+| Build Tool | Vite 6 |
+| CSS | Tailwind CSS 3, Bootstrap Icons |
+| HTTP Client | Axios |
+| Testing | PHPUnit 11 |
 
-## Contributing
+---
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+## Database Schema
 
-## Code of Conduct
+```
+roles               — User roles (e.g. Admin, Employee)
+section_rooms       — Organizational departments/sections
+users               — Employee accounts (linked to role and section)
+company_profiles    — Partner/client company records
+activity_types      — Types of work activities
+task_statuses       — Task lifecycle statuses
+tasks               — Work tasks with metadata and company/activity links
+task_user           — Pivot table: many-to-many user-task assignments
+evidencija          — Individual daily work time log entries
+sessions            — Laravel session storage
+cache / jobs        — Laravel framework infrastructure tables
+```
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+---
 
-## Security Vulnerabilities
+## Getting Started
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+### Prerequisites
+
+- PHP >= 8.2
+- Composer
+- Node.js & npm
+
+### Installation
+
+```bash
+# Clone the repository
+git clone https://github.com/mljeva1/erv_v2.git
+cd erv_v2
+
+# Install PHP dependencies
+composer install
+
+# Install Node.js dependencies
+npm install
+
+# Copy environment file and generate application key
+cp .env.example .env
+php artisan key:generate
+
+# Create the SQLite database file
+touch database/database.sqlite
+
+# Run migrations
+php artisan migrate
+
+# (Optional) Seed the database
+php artisan db:seed
+
+# Build frontend assets
+npm run build
+
+# Start the development server
+php artisan serve
+```
+
+The application will be available at `http://localhost:8000`.
+
+---
+
+## Usage
+
+### Roles
+
+| Role | Capabilities |
+|---|---|
+| **Admin** (role_id = 1) | Full access: users, tasks, companies, settings, search, work records |
+| **Employee** (role_id = 2) | Log work time records, view tasks |
+
+### Key Pages
+
+| URL | Description |
+|---|---|
+| `/` | Dashboard — total tasks and user statistics |
+| `/login` | User login |
+| `/register` | User registration |
+| `/users` | User management (admin only) |
+| `/tasks` | Task listing with status filtering |
+| `/evidencija` | Work time records (authenticated users) |
+| `/evidencija/create` | Log a new work time entry |
+| `/company_profiles` | Company/partner directory |
+| `/settings` | Manage sections and roles (admin only) |
+| `/search?query=...` | Global search across users, tasks, and companies |
+
+---
+
+## Project Structure
+
+```
+app/
+├── Http/Controllers/       # Application controllers
+│   ├── AuthController.php
+│   ├── UserController.php
+│   ├── TaskController.php
+│   ├── EvidencijaController.php
+│   ├── CompanyProfileController.php
+│   ├── SectionRoomController.php
+│   ├── RoleController.php
+│   └── SearchController.php
+├── Models/                 # Eloquent models
+│   ├── User.php
+│   ├── Task.php
+│   ├── Evidencija.php
+│   ├── CompanyProfile.php
+│   ├── ActivityType.php
+│   ├── TaskStatus.php
+│   ├── SectionRoom.php
+│   └── Role.php
+database/
+├── migrations/             # Database schema definitions
+└── seeders/                # Database seeders
+resources/
+└── views/                  # Blade templates
+    ├── layouts/app.blade.php
+    ├── home/
+    ├── auth/
+    ├── users/
+    ├── tasks/
+    ├── evidencija/
+    ├── company_profile/
+    ├── section_role/
+    └── search/
+routes/
+└── web.php                 # Application routes
+```
+
+---
 
 ## License
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
-"# erv_v2" 
+This project is open-source and available under the [MIT License](https://opensource.org/licenses/MIT).
+
