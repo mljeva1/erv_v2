@@ -15,20 +15,18 @@ class TaskController extends Controller
     public function index(Request $request)
     {
         $sortBy = $request->query('sort_by', 'task_code');
-        $sortOrder = $request->query('sort_order', 'asc');
+        $sortOrder = $request->query('sort_order') === 'desc' ? 'desc' : 'asc';
         $status = $request->query('status'); // Dohvati status iz upitnog parametra
 
-        $tasks = Task::select('tasks.*')
-            ->leftJoin('company_profiles', 'tasks.company_profile_id', '=', 'company_profiles.id')
-            ->leftJoin('activity_types', 'tasks.activity_type_id', '=', 'activity_types.id')
+        $tasks = Task::query()
             ->when(in_array($sortBy, ['task_code', 'task_name']), function ($query) use ($sortBy, $sortOrder) {
                 return $query->orderBy($sortBy, $sortOrder);
             })
             ->when($sortBy === 'company_name', function ($query) use ($sortOrder) {
-                return $query->orderBy('company_profiles.company_name', $sortOrder);
+                return $query->orderByRaw("(SELECT company_name FROM company_profiles WHERE company_profiles.id = tasks.company_profile_id LIMIT 1) {$sortOrder}");
             })
             ->when($sortBy === 'activity_name', function ($query) use ($sortOrder) {
-                return $query->orderBy('activity_types.name', $sortOrder);
+                return $query->orderByRaw("(SELECT name FROM activity_types WHERE activity_types.id = tasks.activity_type_id LIMIT 1) {$sortOrder}");
             })
             ->when($status, function ($query) use ($status) {
                 return $query->where('tasks.task_status_id', $status); // Filtriranje po statusu

@@ -61,9 +61,11 @@
                 </th>
                 <th>Status</th>
                 <th>Zaduženi korisnici</th>
-                @if (Auth::user()->role_id != 2) 
+                @auth
+                @if (Auth::user()->role_id != 2)
                     <th></th>
                 @endif
+                @endauth
             </tr>
         </thead>
         <tbody>
@@ -79,13 +81,15 @@
                         {{ $user->first_name }} {{ $user->last_name }} <br>
                     @endforeach
                 </td>
-                @if (Auth::user()->role_id != 2) 
+                @auth
+                @if (Auth::user()->role_id != 2)
                 <td>
                     <button class="btn btn-outline-success btn-sm" data-bs-toggle="modal" data-bs-target="#assignUsersModal{{ $task->id }}">
                         <i class="bi bi-people"></i> Dodijeli korisnike
                     </button>
                 </td>
                 @endif
+                @endauth
             </tr>
         
             <!-- Modal za trenutni zadatak -->
