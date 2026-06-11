@@ -149,11 +149,13 @@ Important Vercel settings:
 | Setting | Value |
 |---|---|
 | Framework Preset | Other |
-| Install Command | `composer install --no-dev --prefer-dist --optimize-autoloader && npm ci` |
+| Install Command | `npm ci` |
 | Build Command | `npm run build` |
 | Output Directory | `public` |
 
 The output directory must be `public`. Laravel serves from `public/index.php`, and Vite writes compiled assets to `public/build`; this project does not generate a root `dist` directory.
+
+Do not set the Vercel Install Command to `composer install ...`. The PHP dependencies are handled by the `vercel-php` function runtime; the project-level install/build only needs Node dependencies for Vite.
 
 Set these environment variables in the Vercel dashboard:
 
