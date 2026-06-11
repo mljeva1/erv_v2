@@ -162,9 +162,12 @@ Set these environment variables in the Vercel dashboard:
 ```bash
 APP_KEY=base64:...
 APP_URL=https://your-vercel-domain.vercel.app
-DB_SYNC_URL=libsql://<database>.turso.io
-DB_AUTH_TOKEN=<turso-auth-token>
+DB_CONNECTION=libsql
+TURSO_DATABASE_URL=libsql://<database>.turso.io
+TURSO_DATABASE_TURSO_AUTH_TOKEN=<turso-auth-token>
 ```
+
+The app uses the Turso HTTP Laravel driver on Vercel. Do not use the native LibSQL PHP extension driver on Vercel, because the Vercel PHP runtime does not provide the `LibSQL` PHP extension.
 
 Generate `APP_KEY` locally with:
 

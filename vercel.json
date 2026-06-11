@@ -27,7 +27,6 @@
         "VIEW_COMPILED_PATH": "/tmp",
 
         "DB_CONNECTION": "libsql",
-        "DB_DATABASE": "/tmp/database.sqlite",
 
         "CACHE_STORE": "array",
         "LOG_CHANNEL": "stderr",
