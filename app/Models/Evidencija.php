@@ -24,7 +24,7 @@ class Evidencija extends Model
     {
         return $this->belongsTo(User::class);
     }
-
+/*
     public function task()
     {
         return $this->belongsTo(Task::class);
@@ -34,4 +34,5 @@ class Evidencija extends Model
     {
         return $this->belongsTo(ActivityType::class);
     }
+        */
 }
