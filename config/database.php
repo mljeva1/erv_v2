@@ -44,8 +44,8 @@ return [
 
         'libsql' => [
             'driver' => 'libsql',
-            'url' => env('DB_DATABASE', env('TURSO_DATABASE_URL', '')),
-            'authToken' => env('DB_AUTH_TOKEN', env('TURSO_DATABASE_TURSO_AUTH_TOKEN', env('TURSO_AUTH_TOKEN', ''))),
+            'url' => env('TURSO_DATABASE_URL', env('DB_DATABASE', '')),
+            'authToken' => env('TURSO_AUTH_TOKEN', env('TURSO_DATABASE_TURSO_AUTH_TOKEN', env('DB_AUTH_TOKEN', ''))),
             'database' => null,
             'prefix' => '',
         ],
